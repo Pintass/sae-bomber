@@ -18,7 +18,7 @@ def creation_carte(long,larg):
             else:
                 carte[i].append(" ")
     return carte
-# --
+##-
 
 def placement_bomber_prise_mur(carte, long, larg):
     """
