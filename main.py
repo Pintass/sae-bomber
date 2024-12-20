@@ -1,5 +1,4 @@
 from random import randint
-from tkiteasy import *
 
 LONGUEUR = 21
 LARGEUR = 20
@@ -92,65 +91,67 @@ def est_case_libre(x:int,y:int, carte:list) -> bool:
         return False
     else:
         False
-        
-def
 
 class Bomber:
-    def __init__(self, pos:tuple):
-        vie = 3
-        niveau = 0
-        porte_bombe = 1 + niveau//2
-        positionx = pos[0]
-        positiony = pos[1]
+    def __init__(self, pos:tuple) -> None:
+        self.vie = 3
+        self.niveau = 0
+        self.porte_bombe = 1 + self.niveau//2
+        self.positionx = pos[0]
+        self.positiony = pos[1]
         
-        def en_vie(self:Bomber) -> bool:
-            """
-            en_vie renvoir un booléen qui indique si le bomber est en vie
+    def en_vie(self) -> bool:
+        """
+        en_vie renvoir un booléen qui indique si le bomber est en vie
 
-            Args:
-                self (Bomber): Un objet Bomber
+        Args:
+            self (Bomber): Un objet Bomber
 
-            Returns:
-                bool: True si le bomber est en vie, False sinon
-            """
-            if self.vie < 1:
-                return False
-            else:
-                return True
+        Returns:
+            bool: True si le bomber est en vie, False sinon
+        """
+        if self.vie < 1:
+            return False
+        else:
+            return True
             
-        def perte_vie(self:Bomber) -> bool:
-            """
-            perte_vie retranche un point de vie et renvoie si le bomber est toujours en vie suite à la perte de point de vie
+    def perte_vie(self) -> bool:
+        """
+        perte_vie retranche un point de vie et renvoie si le bomber est toujours en vie suite à la perte de point de vie
 
-            Args:
-                self (Bomber): Un objet Bomber
+        Args:
+            self (Bomber): Un objet Bomber
 
-            Returns:
-                bool: True si le bomber est en vie, False sinon
-            """
-            assert self.en_vie(), "Le bomber est déjà mort"
-            self.vie = self.vie-1
-            return self.en_vie()
+        Returns:
+            bool: True si le bomber est en vie, False sinon
+        """
+        assert self.en_vie(), "Le bomber est déjà mort"
+        self.vie = self.vie-1
+        return self.en_vie()
         
-        def tuer_bomber(self) :
-            """
-            TUE LE BOMBER, POUR LE DEV
-            """
-            self.vie = 0
+    def tuer_bomber(self) :
+        """
+        TUE LE BOMBER, POUR LE DEV
+        """
+        self.vie = 0
+        return
         
-        def deplacement(self, carte:list, touche:str) -> list:
-            """
-            deplacement fait bouger le bomber sur la carte dans la direction donné par la touche si possible
+    def deplacement(self, carte:list, touche:str) -> list:
+        """
+        deplacement fait bouger le bomber sur la carte dans la direction donné par la touche si possible
 
-            Args:
-                touche (str): touche qui indique la direction: "z" vers le haut, "s" vers le bas, "q" vers la gauche et "d" vers la droite
+        Args:
+            touche (str): touche qui indique la direction: "z" vers le haut, "s" vers le bas, "q" vers la gauche et "d" vers la droite
 
-            Returns:
-                list: Renvoie la carte avec le déplacement fait il cela est possible, sinon renvoie la carte sans changement
-            """
-            if touche == "q":
-                if est_case_libre(self.positionx,self.postiony-1,carte):
-                    pass
+        Returns:
+            list: Renvoie la carte avec le déplacement fait il cela est possible, sinon renvoie la carte sans changement
+        """
+        if touche == "z":
+            if est_case_libre(self.positionx,self.positiony-1,carte):
+                carte[self.positiony][self.positionx] = " "
+                self.positiony -= 1
+                carte[self.positiony][self.positionx] = "P"
+        return
                     
                 
                 
@@ -163,11 +164,7 @@ affichage_carte(carte)
 print("\n")
 position = placement_bomber_prise_mur(carte, LONGUEUR, LARGEUR)
 affichage_carte(carte)
-bomber = Bomber(position["bomber"])
-
+bomber0 = Bomber(position["bomber"])
+bomber0.deplacement(carte, "z")
+affichage_carte(carte)
 numero_tour = 0
-
-while bomber.en_vie():
-    
-    
-    bomber.tuer_bomber()
