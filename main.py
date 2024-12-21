@@ -1,4 +1,5 @@
 from random import randint
+from tkiteasy import ouvrirFenetre
 
 LONGUEUR = 21
 LARGEUR = 20
@@ -168,3 +169,28 @@ bomber0 = Bomber(position["bomber"])
 bomber0.deplacement(carte, "z")
 affichage_carte(carte)
 numero_tour = 0
+
+
+
+# graphic side
+
+g = ouvrirFenetre(LONGUEUR, LARGEUR)
+
+taille = 10
+compteur = 0
+
+
+for l in range(0, LONGUEUR,taille):
+    for h in range(0, LARGEUR,taille):
+        if compteur%2 == 0:
+            g.dessinerRectangle(l,h,taille,taille, "#578c8a")
+        else:
+            g.dessinerRectangle(l,h,taille,taille, "#b2fffd")
+        compteur += 1
+    compteur += 1
+
+
+# Boucle à vide qui attend un clic
+while g.recupererClic() is None:
+    continue
+g.fermerFenetre()
