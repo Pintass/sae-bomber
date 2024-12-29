@@ -4,12 +4,12 @@ import config as cfg
 
 # début du code
 
-def creation_carte(long:int,larg:int) -> list:
+def creation_carte(longu:int,larg:int) -> list:
     """
-        creation_carte créer une carte basique du jeu de Bomberman selon les dimensions long/larg
+        creation_carte créer une carte basique du jeu de Bomberman selon les dimensions longu/larg
 
     Args:
-        long (int): Nombre case sur l'axe x
+        longu (int): Nombre case sur l'axe x
         larg (int): Nombre case sur l'axe y
 
     Returns:
@@ -18,8 +18,8 @@ def creation_carte(long:int,larg:int) -> list:
     carte = []
     for i in range(larg):
         carte.append([])
-        for j in range(long):
-            if j==0 or j==long-1 or i==0 or i==larg-1:
+        for j in range(longu):
+            if j==0 or j==longu-1 or i==0 or i==larg-1:
                 carte[i].append("C")
             elif i%2 == 0 and j%2 == 0:
                 carte[i].append("C")
@@ -27,13 +27,13 @@ def creation_carte(long:int,larg:int) -> list:
                 carte[i].append(" ")
     return carte
 
-def placement_bomber_prise_mur(carte:list, long:int, larg:int) -> dict:
+def placement_bomber_prise_mur(carte:list, longu:int, larg:int) -> dict:
     """
     placement_bomber_prise_mur place le bomber et une prise ethernet sur une ligne qui n'est pas coupé par une colone
 
     Args:
         carte (list): Une carte vierge créé par la fonction création_carte
-        long (int): Nombre case sur l'axe x
+        longu (int): Nombre case sur l'axe x
         larg (int): Nombre case sur l'axe y
 
     Returns:
@@ -44,18 +44,18 @@ def placement_bomber_prise_mur(carte:list, long:int, larg:int) -> dict:
     
     #Placement bomber
     ligneP = possible.pop(randint(0,len(possible)-1))
-    position["bomber"] = (ligneP,randint(1,long-2))
+    position["bomber"] = (ligneP,randint(1,longu-2))
     carte[position["bomber"][0]][position["bomber"][1]] = "P"
 
     #Placement prise
     ligneE = possible.pop(randint(0,len(possible)-1))
-    position["prise"] = (ligneE,randint(1,long-2))
+    position["prise"] = (ligneE,randint(1,longu-2))
     carte[position["prise"][0]][position["prise"][1]] = "E"
     
     #Placement mur
     for i in range(1,larg-1):
         if i not in [ligneP, ligneE]:
-            for j in range(1,long-1):
+            for j in range(1,longu-1):
                 if carte[i][j] == " ":
                     carte[i][j] = "M"
                     
@@ -74,9 +74,10 @@ def affichage_carte(carte:list) -> None:
                 print(carte[i][j])
             else:
                 print(carte[i][j], end='')
+    print("\n")
     return
 
-def est_case_libre(x:int,y:int, carte:list) -> bool:
+def est_case_libre(x:int, y:int, carte:list) -> bool:
     """
     est_case_libre renvoie un bool en fonction de la possibilité à se déplacer sur la case
     
@@ -91,15 +92,15 @@ def est_case_libre(x:int,y:int, carte:list) -> bool:
     if carte[y][x] in ["M","C","E","P","F"]:
         return False
     else:
-        False
+        return True
 
 class Bomber:
     def __init__(self, pos:tuple) -> None:
         self.vie = 3
         self.niveau = 0
         self.porte_bombe = 1 + self.niveau//2
-        self.positionx = pos[0]
-        self.positiony = pos[1]
+        self.positionx = pos[1]
+        self.positiony = pos[0]
         
     def en_vie(self) -> bool:
         """
@@ -130,12 +131,31 @@ class Bomber:
         self.vie = self.vie-1
         return self.en_vie()
         
-    def tuer_bomber(self) :
+    def tuer_bomber(self) -> None:
         """
         TUE LE BOMBER, POUR LE DEV
         """
         self.vie = 0
         return
+    
+    def gain_niveau(self) -> None:
+        """
+        gain_niveau augmente le niveau du bomber de 1 point
+
+        Args:
+            self (Bomber): Un objet Bomber
+
+        Returns:
+            None
+        """
+        self.niveau += 1
+        return
+        
+    def emplacement(self):
+        """
+        emplacement renvoie la postion du bomber
+        """
+        return (self.positionx, self.positiony)
         
     def deplacement(self, carte:list, touche:str) -> list:
         """
@@ -152,23 +172,48 @@ class Bomber:
                 carte[self.positiony][self.positionx] = " "
                 self.positiony -= 1
                 carte[self.positiony][self.positionx] = "P"
+            else:
+                print("impossible")    
+        elif touche == "s":
+            if est_case_libre(self.positionx,self.positiony+1,carte):
+                carte[self.positiony][self.positionx] = " "
+                self.positiony += 1
+                carte[self.positiony][self.positionx] = "P"
+            else:
+                print("impossible") 
+        elif touche == "q":
+            if est_case_libre(self.positionx-1,self.positiony,carte):
+                carte[self.positiony][self.positionx] = " "
+                self.positionx -= 1
+                carte[self.positiony][self.positionx] = "P"        
+        elif touche == "d":
+            if est_case_libre(self.positionx+1,self.positiony,carte):
+                carte[self.positiony][self.positionx] = " "
+                self.positionx += 1
+                carte[self.positiony][self.positionx] = "P"
         return
                     
                 
                 
             
         
-
-
+#Création carte
+print("Création carte")
 carte = creation_carte(cfg.LONGUEUR, cfg.LARGEUR)
 affichage_carte(carte)
-print("\n")
 position = placement_bomber_prise_mur(carte, cfg.LONGUEUR, cfg.LARGEUR)
 affichage_carte(carte)
+
+#Création bomber
+print("Bomber")
 bomber0 = Bomber(position["bomber"])
+bomber0.deplacement(carte, "d")
+affichage_carte(carte)
+bomber0.deplacement(carte, "q")
+affichage_carte(carte)
 bomber0.deplacement(carte, "z")
 affichage_carte(carte)
-numero_tour = 0
-
+bomber0.deplacement(carte, "s")
+affichage_carte(carte)
 
 
