@@ -1,6 +1,3 @@
-timer  250
-timerfantome 20
-
 CCCCCCCCCCCCCCCCCCCCC
 C E                 C
 C C C C C C C C C C C
@@ -22,3 +19,6 @@ C MMMMMMMMMMMMMMMMM C
 C CMCMCMCMCMCMCMCMC C
 C                 E C
 CCCCCCCCCCCCCCCCCCCCC
+
+timer  250
+timerfantome 20
