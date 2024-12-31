@@ -18,7 +18,7 @@ def creation_carte():
     y = 0
     file  = open("map0.txt","r")
     lignes = file.readlines()
-    for ligne in range(len(lignes)) :
+    for ligne in range(len(lignes)-3) : # -3 pour ne pas prendre en compter les paramètres à la fin du fichier
         for mot in range(len(lignes[ligne])):
             x = mot*cfg.taillecase
             y = ligne*cfg.taillecase
@@ -34,24 +34,24 @@ def creation_carte():
             else:
                 g.dessinerRectangle(x, y, cfg.taillecase, cfg.taillecase, "green")
     file.close()
+    g.dessinerRectangle(0, cfg.largeurfenetre-42, cfg.longueurfenetre, cfg.largeurfenetre, "grey")
+    g.afficherTexte("Bomber BUT par Gabriel et Daniel", 206, 445, "black", 14)
 
-def case_valide(x:int,y:int):
+def est_case_valide(x: int, y: int):
     """
-    permet de savoir si une case est valide par ses coordonnées x et y
-
+    Permet de savoir si une case est valide par ses coordonnées x et y.
+    
     Args:
-    x(int) : position horizontale de la case
-    y(int) : position verticale de la case
+    x (int) : position horizontale de la case
+    y (int) : position verticale de la case
     
     Returns:
-    True si elle est disponible
-    False si la case est occupée ou infranchissable
+    True si la case est valide, False sinon
     """
-    couleurs_invalides = ["black", "grey", "blue"]
-    # if getcouleur
-
-
-
+    if ([x,y] in cord_eth) or ([x,y] in cord_col) or ([x,y] in cord_mur):
+        return False
+    else: 
+        return True
 
 # jeu
 creation_carte()
