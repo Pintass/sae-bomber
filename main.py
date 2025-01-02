@@ -162,10 +162,8 @@ class Bomber:
         deplacement fait bouger le bomber sur la carte dans la direction donné par la touche si possible
 
         Args:
-            touche (str): touche qui indique la direction: "z" vers le haut, "s" vers le bas, "q" vers la gauche et "d" vers la droite
+            touche (str): touche qui indique la direction: "z" vers le haut, "s" vers le bas, "q" vers la gauche et "d" vers la droite, une autre touche ne produit pas d'action
 
-        Returns:
-            list: Renvoie la carte avec le déplacement fait il cela est possible, sinon renvoie la carte sans changement
         """
         if touche == "z":
             if est_case_libre(self.positionx,self.positiony-1,carte):
@@ -190,9 +188,7 @@ class Bomber:
         return
                     
                 
-                
-            
-        
+                 
 #Création carte
 print("Création carte")
 carte = creation_carte(cfg.LONGUEUR, cfg.LARGEUR)
@@ -204,8 +200,12 @@ affichage_carte(carte)
 print("Bomber")
 bomber0 = Bomber(position["bomber"])
 affichage_carte(carte)
+
+#Tour de jeu
+tour = 0
 while True:
-    touche = input("Déplacement")
+    tour += 1
+    touche = input("Déplacement: ")
     if touche == "x":
         break
     else:
