@@ -55,7 +55,7 @@ def placement_bomber_prise_mur(carte:list, longu:int, larg:int) -> dict:
     #Placement mur
     for i in range(1,larg-1):
         if i not in [ligneP, ligneE]:
-            for j in range(1,longu-1):
+            for j in range(2,longu-2):
                 if carte[i][j] == " ":
                     carte[i][j] = "M"
                     
@@ -172,15 +172,11 @@ class Bomber:
                 carte[self.positiony][self.positionx] = " "
                 self.positiony -= 1
                 carte[self.positiony][self.positionx] = "P"
-            else:
-                print("impossible")    
         elif touche == "s":
             if est_case_libre(self.positionx,self.positiony+1,carte):
                 carte[self.positiony][self.positionx] = " "
                 self.positiony += 1
                 carte[self.positiony][self.positionx] = "P"
-            else:
-                print("impossible") 
         elif touche == "q":
             if est_case_libre(self.positionx-1,self.positiony,carte):
                 carte[self.positiony][self.positionx] = " "
@@ -207,13 +203,13 @@ affichage_carte(carte)
 #Création bomber
 print("Bomber")
 bomber0 = Bomber(position["bomber"])
-bomber0.deplacement(carte, "d")
 affichage_carte(carte)
-bomber0.deplacement(carte, "q")
-affichage_carte(carte)
-bomber0.deplacement(carte, "z")
-affichage_carte(carte)
-bomber0.deplacement(carte, "s")
-affichage_carte(carte)
+while True:
+    touche = input("Déplacement")
+    if touche == "x":
+        break
+    else:
+        bomber0.deplacement(carte,touche)
+        affichage_carte(carte)
 
 
