@@ -29,7 +29,7 @@ def creation_carte(longu:int,larg:int) -> list:
 
 def placement_bomber_prise_mur(carte:list, longu:int, larg:int) -> dict:
     """
-    placement_bomber_prise_mur place le bomber et une prise ethernet sur une ligne qui n'est pas coupé par une colone
+    placement_bomber_prise_mur place le bomber et la/les prise(s) ethernet(s) sur une ligne qui n'est pas coupé par des colones chaque élément sur une ligne distinct
 
     Args:
         carte (list): Une carte vierge créé par la fonction création_carte
@@ -37,10 +37,10 @@ def placement_bomber_prise_mur(carte:list, longu:int, larg:int) -> dict:
         larg (int): Nombre case sur l'axe y
 
     Returns:
-        dict: un dictionaire de deux élément dont les clé sont "bomber" et "prise" avec comme valeur leur position respective sous forme de tuple
+        dict: un dictionaire de deux élément dont les clé sont "bomber" et "prise" avec comme valeur leur position respective sous forme de tuple(y,x)
     """
     possible = [x for x in range(1,larg-1,2)]
-    position = { "bomber": None, "prise": None}
+    position = {"bomber": (None,None), "prise": []}
     
     #Placement bomber
     ligneP = possible.pop(randint(0,len(possible)-1))
@@ -48,13 +48,15 @@ def placement_bomber_prise_mur(carte:list, longu:int, larg:int) -> dict:
     carte[position["bomber"][0]][position["bomber"][1]] = "P"
 
     #Placement prise
-    ligneE = possible.pop(randint(0,len(possible)-1))
-    position["prise"] = (ligneE,randint(1,longu-2))
-    carte[position["prise"][0]][position["prise"][1]] = "E"
+    assert cfg.NOMBRE_PRISE <= len(possible), "Trop de prise à placer"
+    for i in range(cfg.NOMBRE_PRISE):
+        ligneE = possible.pop(randint(0,len(possible)-1))
+        position["prise"].append((ligneE,randint(1,longu-2)))
+        carte[position["prise"][i][0]][position["prise"][i][1]] = "E"
     
     #Placement mur
     for i in range(1,larg-1):
-        if i not in [ligneP, ligneE]:
+        if i not in [ligneP]+[ligne[0] for ligne in position["prise"]]:
             for j in range(2,longu-2):
                 if carte[i][j] == " ":
                     carte[i][j] = "M"
@@ -151,7 +153,7 @@ class Bomber:
         self.niveau += 1
         return
         
-    def emplacement(self):
+    def emplacement(self) -> tuple:
         """
         emplacement renvoie la postion du bomber
         """
@@ -186,7 +188,45 @@ class Bomber:
                 self.positionx += 1
                 carte[self.positiony][self.positionx] = "P"
         return
+    
                     
+#Fantome
+class Fantome:
+    def __init__(self, x, y):
+        """
+        __init__ Un Fantome a l'emplacement x, y
+
+        Args:
+            x (int): Axe x de l'emplacement du fantome
+            y (int): Axe y de l'emplacement du fantome
+        """
+        self.x = x
+        self.y = y
+        
+        
+def génération_fantome(emplacement_prise:list, carte:list, registe_f:list) -> list:
+    """
+    génération_fantome créé un fantome par prise sur la carte et renvoie le nouveau registre
+
+        Args:
+            emplacement_prise (list): liste de tuple des différents emplacements des prises
+            carte (list): Carte du jeu
+            registre_f (list): Registre des fantomes
+
+        Returns:
+            list: Registre à jour avec les nouveaux fantomes si créés
+    """
+    for prise in emplacement_prise:
+        appariton_possible = []
+        for case_autour in [(prise[0]-1,prise[1]),(prise[0]+1,prise[1]),(prise[0],prise[1]-1),(prise[0],prise[1]+1)]:
+            if est_case_libre(case_autour[1],case_autour[0], carte):
+                appariton_possible.append(case_autour)
+        if appariton_possible != []:
+            appariton = appariton_possible[randint(0,len(appariton_possible)-1)]
+            carte[appariton[0]][appariton[1]] = "F"
+            registe_f.append(Fantome(appariton[1],appariton[0]))
+    return registe_f
+            
                 
                  
 #Création carte
@@ -201,15 +241,24 @@ print("Bomber")
 bomber0 = Bomber(position["bomber"])
 affichage_carte(carte)
 
+#Création Fantome: 0 fantome au début
+registre_fantome = []
+
 #Tour de jeu
 tour = 0
-while True:
+while bomber0.en_vie():
     tour += 1
+    if tour%cfg.TIMER_FANTOME == 0:
+        registre_fantome = génération_fantome(position["prise"], carte, registre_fantome)
+        print(registre_fantome[0].x,registre_fantome[0].y,registre_fantome[1].x,registre_fantome[1].y)
+        
+    print(f"Tour n°: {tour}")
     touche = input("Déplacement: ")
     if touche == "x":
         break
     else:
         bomber0.deplacement(carte,touche)
         affichage_carte(carte)
+print("GAME OVER")
 
 
