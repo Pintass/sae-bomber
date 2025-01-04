@@ -188,11 +188,24 @@ class Bomber:
                 self.positionx += 1
                 carte[self.positiony][self.positionx] = "P"
         return
-    
+
+def toursuivant(numero:int) -> int:
+    """
+    toursuivant fait l'affichage du tour suivant
+
+    Args:
+        numero (int): numéro du tour actuel
+
+    Returns:
+        int: numéro du tour suivant
+    """
+    numero += 1
+    print(f"Tour n°: {tour}")
+    return numero
                     
 #Fantome
 class Fantome:
-    def __init__(self, x, y):
+    def __init__(self, x:int, y:int) -> None:
         """
         __init__ Un Fantome a l'emplacement x, y
 
@@ -202,7 +215,24 @@ class Fantome:
         """
         self.x = x
         self.y = y
+        self.ancienx = None
+        self.ancieny = None
         
+    def a_bouger(self) -> None:
+        self.x = self.ancienx
+        self.y = self.ancieny
+        
+    def attaque(self, registre_f:list, carte:list) -> None:
+        """
+        attaque des fantome pour un tour de jeu
+
+        Args:
+            registre_f (list): liste des fantome sur la carte qui vont attaquer
+            carte (list): carte du jeu
+        """
+        nouveau_registre_pos = []
+        for i in range(len(registre_f)):
+            pass            
         
 def génération_fantome(emplacement_prise:list, carte:list, registe_f:list) -> list:
     """
@@ -214,7 +244,7 @@ def génération_fantome(emplacement_prise:list, carte:list, registe_f:list) -> 
             registre_f (list): Registre des fantomes
 
         Returns:
-            list: Registre à jour avec les nouveaux fantomes si créés
+            list: Registre à jour avec les nouveaux fantomes
     """
     for prise in emplacement_prise:
         appariton_possible = []
@@ -247,15 +277,15 @@ registre_fantome = []
 #Tour de jeu
 tour = 0
 while bomber0.en_vie():
-    tour += 1
+    tour = toursuivant(tour)
+    
     if tour%cfg.TIMER_FANTOME == 0:
         registre_fantome = génération_fantome(position["prise"], carte, registre_fantome)
-        print(registre_fantome[0].x,registre_fantome[0].y,registre_fantome[1].x,registre_fantome[1].y)
         
-    print(f"Tour n°: {tour}")
+
     touche = input("Déplacement: ")
     if touche == "x":
-        break
+        bomber0.tuer_bomber()
     else:
         bomber0.deplacement(carte,touche)
         affichage_carte(carte)
