@@ -1,5 +1,6 @@
 from tkiteasy import ouvrirFenetre
 import config as cfg
+from random import randint
 
 g = ouvrirFenetre(cfg.longueurfenetre, cfg.largeurfenetre)
 cords = []
@@ -14,6 +15,7 @@ def creation_carte():
     """
     x = 0
     y = 0
+    position = {"bomber": None, "prise": []}
     file  = open("map0.txt","r")
     lignes = file.readlines()
     for ligne in range(len(lignes)-3) : # -3 pour ne pas prendre en compter les paramètres à la fin du fichier
@@ -31,6 +33,8 @@ def creation_carte():
             else:
                 obj = g.dessinerRectangle(x, y, cfg.taillecase, cfg.taillecase, "green")
                 cord_temp.append([obj, "vide"])
+                if lignes[ligne][mot] == "P":
+                    position["bomber"] = (x,y)
             x += cfg.taillecase
         cords.append(cord_temp)
         y += cfg.taillecase
@@ -39,6 +43,7 @@ def creation_carte():
     file.close()
     g.dessinerRectangle(0, cfg.largeurfenetre-42, cfg.longueurfenetre, cfg.largeurfenetre, "grey")
     g.afficherTexte("Bomber BUT par Gabriel et Daniel", 206, 445, "black", 14)
+    return position
 
 def est_case_valide(x: int, y: int):
     """
@@ -51,7 +56,7 @@ def est_case_valide(x: int, y: int):
     Returns:
     True si la case est valide, False sinon
     """
-    if cords[y][x][1] in ["colonne", "mur", "ethernet", "fantome"]:
+    if cords[y][x][1] in ["colonne", "mur", "ethernet", "fantome", "bomber"]:
         return False
     else:
         return True
@@ -167,13 +172,14 @@ def toursuivant(numero:list) -> list:
 
 
 # jeu
-creation_carte()
-joueur = Bomber(g.afficherImage(21, 20, "img/bomberman.png"))
+position = creation_carte()
+joueur = Bomber(g.afficherImage(position["bomber"][0], position["bomber"][1], "img/bomberman.png"))
+registre_fantome = []
 
 #début tour
 tour = [0, g.afficherTexte("Tour n°0", 112, 415, "black", 14)]
 while joueur.en_vie():  
-    tour = toursuivant(tour)
+    tour = toursuivant(tour)   
     
     touche = g.attendreTouche()
     if touche == "x":
