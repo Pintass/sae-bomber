@@ -346,6 +346,8 @@ class Canevas(tk.Canvas):
         y: float,
         fichier: str | PathLike[str],
         ancre: Literal["n", "s", "w", "e", "nw", "sw", "ne", "se", "center"] = "nw",
+        width: int | None = None,
+        height: int | None = None,
     ) -> ObjetGraphique:
         """Affiche une image spécifiée par son chemin au coordonnées données.
 
@@ -362,6 +364,8 @@ class Canevas(tk.Canvas):
             photo_image = self.images[fichier]
         else:
             img = Image.open(fichier)
+            if width is not None and height is not None:
+                img = img.resize((width, height), Image.Resampling.LANCZOS)
             photo_image = ImageTk.PhotoImage(img)
             self.images[fichier] = photo_image
 

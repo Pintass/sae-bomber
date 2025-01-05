@@ -5,6 +5,6 @@ NOMBRE_PRISE = 2
 TIMER_FANTOME = 20
 
 # graphic side
-taillecase = 20
+taillecase = 40
 longueurfenetre = taillecase*21
-largeurfenetre = taillecase*21+42
+largeurfenetre = taillecase*24

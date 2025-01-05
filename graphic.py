@@ -22,13 +22,13 @@ def creation_carte():
         cord_temp = []
         for mot in range(len(lignes[ligne])):
             if lignes[ligne][mot] == "C":
-                obj = g.dessinerRectangle(x, y, cfg.taillecase, cfg.taillecase, "grey")
+                obj = g.afficherImage(x, y, "img/colonne.png", "nw", cfg.taillecase, cfg.taillecase)
                 cord_temp.append([obj, "colonne"])
             elif lignes[ligne][mot] == "M":
-                obj = g.dessinerRectangle(x, y, cfg.taillecase, cfg.taillecase, "black")
+                obj = g.afficherImage(x, y, "img/mur.png", "nw", cfg.taillecase, cfg.taillecase)
                 cord_temp.append([obj, "mur"])
             elif lignes[ligne][mot] == "E":
-                obj = g.dessinerRectangle(x, y, cfg.taillecase, cfg.taillecase, "blue")
+                obj = g.afficherImage(x, y, "img/ethernet.png", "nw", cfg.taillecase, cfg.taillecase)
                 cord_temp.append([obj, "ethernet"])
             else:
                 obj = g.dessinerRectangle(x, y, cfg.taillecase, cfg.taillecase, "green")
@@ -42,7 +42,7 @@ def creation_carte():
    
     file.close()
     g.dessinerRectangle(0, cfg.largeurfenetre-42, cfg.longueurfenetre, cfg.largeurfenetre, "grey")
-    g.afficherTexte("Bomber BUT par Gabriel et Daniel", 206, 445, "black", 14)
+    g.afficherTexte("Bomber BUT par Gabriel et Daniel", 10*cfg.taillecase, 23*cfg.taillecase, "black", 14)
     return position
 
 def est_case_valide(x: int, y: int):
@@ -135,20 +135,20 @@ class Bomber:
 
         """
         taille = cfg.taillecase
-        if touche == "KP_Up" or touche == "z":
+        if touche == "Up" or touche == "z":
             if est_case_valide(self.bomber.x//taille, (self.bomber.y-taille)//taille):
                 g.deplacer(self.bomber, 0, -taille)
                 
-        elif touche == "KP_Down" or touche == "s":
+        elif touche == "Down" or touche == "s":
             if est_case_valide(self.bomber.x//taille, (self.bomber.y+taille)//taille):
                 g.deplacer(self.bomber, 0, taille)
                 
                 
-        elif touche == "KP_Left" or touche == "q":
+        elif touche == "Left" or touche == "q":
             if est_case_valide((self.bomber.x-taille)//taille, self.bomber.y//taille):
                 g.deplacer(self.bomber, -taille, 0)
                       
-        elif touche == "KP_Right" or touche == "d":
+        elif touche == "Right" or touche == "d":
             if est_case_valide((self.bomber.x+taille)//taille, self.bomber.y//taille):
                 g.deplacer(self.bomber, taille, 0)
         return
@@ -166,18 +166,18 @@ def toursuivant(numero:list) -> list:
     numero[0] += 1
     g.supprimer(numero[1])
     texte_a_écrire = "Tour n°" + str(numero[0])
-    text = g.afficherTexte(texte_a_écrire, 112, 415, "black", 14)
+    text = g.afficherTexte(texte_a_écrire, 6*cfg.taillecase, 22*cfg.taillecase, "black", 14)
     g.actualiser()
     return [numero[0], text]
 
 
 # jeu
 position = creation_carte()
-joueur = Bomber(g.afficherImage(position["bomber"][0], position["bomber"][1], "img/bomberman.png"))
+joueur = Bomber(g.afficherImage(position["bomber"][0], position["bomber"][1], "img/bomberman.png", "nw", cfg.taillecase, cfg.taillecase))
 registre_fantome = []
 
 #début tour
-tour = [0, g.afficherTexte("Tour n°0", 112, 415, "black", 14)]
+tour = [0, g.afficherTexte("Tour n°0", 6*cfg.taillecase, 20*cfg.taillecase, "black", 14)]
 while joueur.en_vie():  
     tour = toursuivant(tour)   
     
