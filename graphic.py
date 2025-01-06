@@ -41,7 +41,7 @@ def creation_carte():
         x = 0
    
     file.close()
-    g.dessinerRectangle(0, cfg.largeurfenetre-42, cfg.longueurfenetre, cfg.largeurfenetre, "grey")
+    g.dessinerRectangle(0, cfg.taillecase*21, cfg.longueurfenetre, cfg.largeurfenetre, "grey")
     g.afficherTexte("Bomber BUT par Gabriel et Daniel", 10*cfg.taillecase, 23*cfg.taillecase, "black", 14)
     return position
 
@@ -104,6 +104,7 @@ class Bomber:
         """
         TUE LE BOMBER, POUR LE DEV
         """
+
         self.vie = 0
         return
     
@@ -155,20 +156,36 @@ class Bomber:
     
 def toursuivant(numero:list) -> list:
     """
-    toursuivant fait l'affichage du tour suivant
+    toursuivant refresh le nombre de tours restants
 
     Args:
-        numero (list): numéro du tour actuel
+        numero (list): nombre de tours restants
+
 
     Returns:
         int: numéro du tour suivant
     """
-    numero[0] += 1
+    numero[0] -= 1
     g.supprimer(numero[1])
-    texte_a_écrire = "Tour n°" + str(numero[0])
+    texte_a_écrire = "Tours restants : " + str(numero[0])
     text = g.afficherTexte(texte_a_écrire, 6*cfg.taillecase, 22*cfg.taillecase, "black", 14)
     g.actualiser()
     return [numero[0], text]
+
+def est_partie_finie(numero:list) -> bool:
+    """
+    partie finie renvoie l'état de la partie
+
+    Args:
+        numero (list): nombre de tours restants
+
+
+    Returns:
+        bool: True si la partie est terminée
+    """
+    if numero[0] < 0: 
+        return True 
+    return False
 
 
 # jeu
@@ -177,14 +194,31 @@ joueur = Bomber(g.afficherImage(position["bomber"][0], position["bomber"][1], "i
 registre_fantome = []
 
 #début tour
-tour = [0, g.afficherTexte("Tour n°0", 6*cfg.taillecase, 20*cfg.taillecase, "black", 14)]
+tour = [cfg.TIMER_GLOBAL, g.afficherTexte("Tours restants : ", 6*cfg.taillecase, 20*cfg.taillecase, "black", 14)]
 while joueur.en_vie():  
     tour = toursuivant(tour)   
+    if est_partie_finie(tour):
+        text_fini = g.afficherTexte("GAME OVER", 12*cfg.taillecase, 22*cfg.taillecase, "red", "20")
+        while g.recupererClic() is None:
+            continue
+        g.fermerFenetre()
+        
     
     touche = g.attendreTouche()
     if touche == "x":
-        joueur.tuer_bomber()
+        ui_confirmation = g.afficherImage(0, 0, "img/ui_confirmation.png", "nw", cfg.longueurfenetre, cfg.largeurfenetre)
+        touche = g.attendreTouche()
+        touche_pressee = True
+        while touche_pressee:
+            if touche == "o":
+                touche_pressee = False
+                joueur.tuer_bomber()
+            elif touche == "n": 
+                touche_pressee = False
+                g.supprimer(ui_confirmation)
+            else: 
+                touche = g.attendreTouche()
+
     else:
         joueur.deplacement(touche)
-print("GAME OVER")
 
