@@ -2,8 +2,7 @@ from random import randint
 import config as cfg
 
 
-# début du code
-
+# Début du code
 def creation_carte(longu:int,larg:int) -> list:
     """
         creation_carte créer une carte basique du jeu de Bomberman selon les dimensions longu/larg
@@ -96,6 +95,7 @@ def est_case_libre(x:int, y:int, carte:list) -> bool:
     else:
         return True
 
+#Bomber
 class Bomber:
     def __init__(self, pos:tuple) -> None:
         self.vie = 3
@@ -103,6 +103,7 @@ class Bomber:
         self.porte_bombe = 1 + self.niveau//2
         self.positionx = pos[1]
         self.positiony = pos[0]
+        self.bombe = []
         
     def en_vie(self) -> bool:
         """
@@ -190,8 +191,21 @@ class Bomber:
                 self.positionx += 1
                 carte[self.positiony][self.positionx] = "P"
         return
-    
-def partie_finis(tour:int) -> bool:
+
+    def pose_bombe(self, carte:list) -> None:
+        """
+        pose_bombe pose une bombe sur la carte
+
+        Args:
+            carte (list): Carte du jeu
+
+        Returns:
+            None
+        """
+        self.bombe.append([self.positionx,self.positiony,cfg.TIMER_BOMBE])
+
+#Gestion des tours    
+def est_partie_finis(tour:int) -> bool:
     """
     partie_finis renvoie un booléen qui indique l'état de la partie
 
@@ -235,6 +249,7 @@ class Fantome:
         self.ancieny = None
                 
     def a_bouger(self, nouveau_x:int, nouveau_y:int) -> None:
+        
         self.ancienx = self.x
         self.ancieny = self.y
         self.x = nouveau_x
@@ -323,13 +338,19 @@ def génération_fantome(emplacement_prise:list, carte:list, registe_f:list) -> 
     return registe_f
 
 def action_des_fantomes(registre_f:list, carte:list, bomber:Bomber) -> None:
+    """
+    action_des_fantomes gère laction des fantomes
+
+    Args:
+        registre_f (list): Les fantomes de la carte
+        carte (list): Carte du jeu
+        bomber (Bomber): Le bomber en jeu
+    """
     for fantome in registre_f:
         if fantome.dois_attaquer_bomber(carte):
             bomber.perte_vie()
         else:
             fantome.deplacement_f(carte)
-            
-            
                 
                  
 #Création carte
@@ -351,9 +372,9 @@ registre_fantome = []
 tour = cfg.TIMER_GLOBAL
 while bomber0.en_vie():
     tour = toursuivant(tour)
-    if partie_finis(tour):
+    if est_partie_finis(tour):
         break
-    print(bomber0.vie)
+    print("Le bomber a",bomber0.vie,"vie(s)")
     
     if (cfg.TIMER_GLOBAL-tour)%cfg.TIMER_FANTOME == 0:
         registre_fantome = génération_fantome(position["prise"], carte, registre_fantome)
@@ -361,6 +382,8 @@ while bomber0.en_vie():
     touche = input("Déplacement: ")
     if touche == "x":
         bomber0.tuer_bomber()
+    elif touche == "a":
+        pass
     else:
         bomber0.deplacement(carte,touche)
         affichage_carte(carte)
