@@ -190,6 +190,20 @@ class Bomber:
                 self.positionx += 1
                 carte[self.positiony][self.positionx] = "P"
         return
+    
+def partie_finis(tour:int) -> bool:
+    """
+    partie_finis renvoie un booléen qui indique l'état de la partie
+
+    Args:
+        tour (int): Nombre de tour restant
+
+    Returns:
+        bool: True si la partie est finis, False sinon
+    """
+    if tour < 0:
+        return True
+    return False
 
 def toursuivant(numero:int) -> int:
     """
@@ -201,7 +215,7 @@ def toursuivant(numero:int) -> int:
     Returns:
         int: numéro du tour suivant
     """
-    numero += 1
+    numero -= 1
     print(f"Tour n°: {tour}")
     return numero
                     
@@ -334,13 +348,15 @@ affichage_carte(carte)
 registre_fantome = []
 
 #Tour de jeu
-tour = 15
+tour = cfg.TIMER_GLOBAL
 while bomber0.en_vie():
     tour = toursuivant(tour)
+    if partie_finis(tour):
+        break
+    print(bomber0.vie)
     
-    if tour%cfg.TIMER_FANTOME == 0:
+    if (cfg.TIMER_GLOBAL-tour)%cfg.TIMER_FANTOME == 0:
         registre_fantome = génération_fantome(position["prise"], carte, registre_fantome)
-        
 
     touche = input("Déplacement: ")
     if touche == "x":
@@ -349,7 +365,7 @@ while bomber0.en_vie():
         bomber0.deplacement(carte,touche)
         affichage_carte(carte)
     
-    action_des_fantomes(registre_fantome, carte, bomber0)    
+    action_des_fantomes(registre_fantome, carte, bomber0)   
     
 print("GAME OVER")
 
