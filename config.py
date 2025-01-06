@@ -7,7 +7,7 @@ TIMER_FANTOME = 20
 # graphic side
 taillecase = 40
 longueurfenetre = taillecase*21
-largeurfenetre = taillecase*24
+largeurfenetre = longueurfenetre+(taillecase*3)
 
 #shared 
 TIMER_GLOBAL = 50
