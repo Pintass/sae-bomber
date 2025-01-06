@@ -16,6 +16,8 @@
 - Flèches du Numpad : Déplacement de votre personnage.
 - ZQSD : Alternative pour le déplacement.
 - X : Ouvre le menu de confirmation pour quitter le jeu.
+- E : afin de pouvoir placer une bombe
+- N'importe quelle autre touche permet de passer son tour (ou ne rien faire)
 
 ## Organisation des fichiers
 - Le jeu est fait sous 2 versions : la version terminale et la version graphique.
@@ -23,8 +25,18 @@
   - Le jeu terminale est dans jeu_main.py
 - Le script du jeu nécessite plusieurs fichiers : config.py, le dossier "img", la librairie tkiteasy modifiée ainsi qu'un qu'un fichier.txt générant la map, par défaut, il y a map0.txt.
 
+## Fichier configuration
+- Le fichier configuration est une alternative plus simple et rapide afin de pouvoir changer certains paramètres plus ou moins essentiels :
+  - La taille de la fenètre.
+  - La taille d'une case.
+  - Le nombre de tours avant le spawn d'un fantôme.
+  - Le nombre de tours total.
+  - Le nombre de points de vie du Bomber et des fantômes.
 
-## Auteurs
-Ce projet a été réalisé par Daniel et Gabriel.
+### Le jeu graphique est plus complet que le jeu terminale par faute de temps.
+
+
+### Ce projet a été réalisé par Daniel Rodrigues Amorim et Gabriel Chifflet.
+
 
 
