@@ -19,8 +19,8 @@
 
 ## Organisation des fichiers
 - Le jeu est fait sous 2 versions : la version terminale et la version graphique.
--- Le jeu graphique est dans jeu_graphique.py.
--- Le jeu terminale est dans jeu_main.py
+  - Le jeu graphique est dans jeu_graphique.py.
+  - Le jeu terminale est dans jeu_main.py
 - Le script du jeu nécessite plusieurs fichiers : config.py, le dossier "img", la librairie tkiteasy modifiée ainsi qu'un qu'un fichier.txt générant la map, par défaut, il y a map0.txt.
 
 
