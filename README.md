@@ -26,12 +26,15 @@
 
 ## Fichier configuration
 - Le fichier configuration est une alternative plus simple et rapide afin de pouvoir changer certains paramètres plus ou moins essentiels :
-  - La taille de la fenètre.
-  - La taille d'une case.
-  - Le nombre de tours avant le spawn d'un fantôme.
-  - Le nombre de tours total.
-  - Le nombre de points de vie du Bomber et des fantômes.
-  - Le rayon (par case) de l'explosion d'une bombe.
+  - La taille de la fenètre,
+  - La taille d'une case,
+  - Le nombre de tours avant le spawn d'un fantôme,
+  - Le nombre de tours total,
+  - Le nombre de points de vie du Bomber et des fantômes,
+  - Le rayon (par case) de l'explosion d'une bombe,
+  - Le nombre de points par fantôme tué,
+  - Le nombre de points par mur détruit,
+  - Le nombre de points pour gagner.
 
 #### Le jeu graphique est plus complet que le jeu terminale par faute de temps.
 
