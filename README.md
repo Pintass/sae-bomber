@@ -36,6 +36,21 @@
   - Le nombre de points par mur détruit,
   - Le nombre de points pour gagner.
 
+## Paramètres de base
+- Longueur : permet de déterminer la longueur du jeu TERMINAL uniquement,
+- Largeur : permet de déterminer la largeur du jeu TERMINAL uniquement,
+- Nombre de prise : permet de déterminer le nombre de prises sur le jeu TERMINAL uniquement,
+- Timer_Fantome : permet de déterminer au bout de combien de tours les fantômes vont spawn pour les 2 jeux,
+- PV_Fantome : permet de déterminer le nombre de points de vie des fantômes (uniquement disponible sur le jeu graphique),
+- Point_fantome : permet de déterminer le nombre de points que l'on gagne en éliminant un fantôme (uniquement disponible sur le jeu graphique),
+- Point_mur : permet de déterminer le nombre de points que l'on gagne en détruisant un mur (uniquement disponible sur le jeu graphique),
+- Point_GANGER : permet de déterminer le score nécessaire pour gagner la partie (uniquement disponible sur le jeu graphique),
+- taillecase : détermine la taille (en pixels) d'une case (uniquement disponible sur le jeu graphique),
+- longueurfenetre et largeurfenetre s'adaptent par rapport à taillecase (uniquement disponible sur le jeu graphique),
+- timer_global : permet de déterminer le nombre maximal de tours avant de perdre le jeu (uniquement disponible sur le jeu graphique),
+- timer_bombe : détermine le nombre de tours nécessaires avant l'explosion de la bombe (uniquement disponible sur le jeu graphique),
+- rayon_bombe : détermine le rayon (par cases) d'explosion d'une bombe (uniquement disponible sur le jeu graphique), 
+ 
 #### Le jeu graphique est plus complet que le jeu terminale par faute de temps.
 
 
