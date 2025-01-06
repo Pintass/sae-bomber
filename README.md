@@ -33,10 +33,10 @@
   - Le nombre de tours total.
   - Le nombre de points de vie du Bomber et des fantômes.
 
-### Le jeu graphique est plus complet que le jeu terminale par faute de temps.
+#### Le jeu graphique est plus complet que le jeu terminale par faute de temps.
 
 
-### Ce projet a été réalisé par Daniel Rodrigues Amorim et Gabriel Chifflet.
+#### Ce projet a été réalisé par Daniel Rodrigues Amorim et Gabriel Chifflet.
 
 
 
