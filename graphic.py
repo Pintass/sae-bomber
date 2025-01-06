@@ -41,7 +41,7 @@ def creation_carte():
         x = 0
    
     file.close()
-    g.dessinerRectangle(0, cfg.largeurfenetre-42, cfg.longueurfenetre, cfg.largeurfenetre, "grey")
+    g.dessinerRectangle(0, cfg.taillecase*21, cfg.longueurfenetre, cfg.largeurfenetre, "grey")
     g.afficherTexte("Bomber BUT par Gabriel et Daniel", 10*cfg.taillecase, 23*cfg.taillecase, "black", 14)
     return position
 
@@ -104,6 +104,7 @@ class Bomber:
         """
         TUE LE BOMBER, POUR LE DEV
         """
+
         self.vie = 0
         return
     
@@ -152,23 +153,145 @@ class Bomber:
             if est_case_valide((self.bomber.x+taille)//taille, self.bomber.y//taille):
                 g.deplacer(self.bomber, taille, 0)
         return
+
+
+
+# fantome
+class Fantome:
+    def __init__(self, personnage) -> None:
+        """
+        __init__ Un Fantome a l'emplacement x, y
+
+        Args:
+            personnage : objet graphique du personnage
+        """
+        self.ancienx = None
+        self.ancieny = None
+        self.fantome = personnage
+
+    def placer_f(self, x:int, y:int) -> int:
+        """
+        placer_f Enlève de la carte le fantome aux anciennes positions et le met aux nouvelles
+
+        Args:
+            x (int) : coordonnée sur l'axe x
+            y (int) : coordonnée sur l'axe y
+        
+        Returns:
+            difference_x (int) : difference sur l'axe x entre la nouvelle et l'ancienne position du fantome afin de pouvoir le deplacer
+            difference_x (int) : difference sur l'axe y entre la nouvelle et l'ancienne position du fantome afin de pouvoir le deplacer
+        """
+
+        difference_x = self.fantome.x - x 
+        difference_y = self.fantome.y - y
+        return difference_x, difference_y
+        
+        
+    def deplacement_f(self) -> None:
+        """
+        déplacement_f fait bouger les fantome pour un tour de jeu
+        """
+        déplacment_possible = []
+
+        taille = cfg.taillecase
+        if est_case_valide(self.fantome.x//taille, (self.fantome.y-taille)//taille) and self.fantome.y-1 != self.ancieny:
+            déplacment_possible.append((self.fantome.x, self.fantome.y-1))
+            
+                
+        if est_case_valide(self.fantome.x//taille, (self.fantome.y+taille)//taille) and self.fantome.y+1 != self.ancieny:
+            déplacment_possible.append((self.fantome.x, self.fantome.y+1))
+                
+        if est_case_valide((self.fantome.x-taille)//taille, self.fantome.y//taille) and self.fantome.x-1 != self.ancienx:
+            déplacment_possible.append((self.fantome.x-1, self.fantome.y))
+                      
+        if est_case_valide((self.fantome.x+taille)//taille, self.fantome.y//taille) and self.fantome.x+1 != self.ancienx:
+            déplacment_possible.append((self.fantome.x+1, self.fantome.y))
+
+        if déplacment_possible == [] and est_case_valide(self.ancienx, self.ancieny):
+            x,y = self.placer_f(self.ancienx, self.ancieny)
+            g.deplacer(self.fantome, x, y)
+            
+        elif déplacment_possible != []:
+            if len(déplacment_possible) == 1:
+                choix = 0
+            else:
+                choix = randint(0,len(déplacment_possible)-1)
+            x,y = self.placer_f(déplacment_possible[choix][0],déplacment_possible[choix][1])
+            g.deplacer(self.fantome, x, y)
+        return
+
+    
+    def dois_attaquer_bomber(self, bomber:Bomber) -> bool:
+        """
+        dois_attaquer_bomber renvoie un booléen qui indique si le fantome a un bomber dans son voisnnage et doit l'attaquer
+        """
+        attaque = False
+        if carte[self.y-1][self.x] == "P" or carte[self.y+1][self.x] == "P" or carte[self.y][self.x-1] == "P" or carte[self.y][self.x+1] == "P":
+            attaque = True
+        return attaque                    
+        
+def génération_fantome(emplacement_prise:list, carte:list, registe_f:list) -> list:
+    """
+    génération_fantome créé un fantome par prise sur la carte et renvoie le nouveau registre
+
+        Args:
+            emplacement_prise (list): liste de tuple des différents emplacements des prises
+            carte (list): Carte du jeu
+            registre_f (list): Registre des fantomes
+
+        Returns:
+            list: Registre à jour avec les nouveaux fantomes
+    """
+    for prise in emplacement_prise:
+        appariton_possible = []
+        for case_autour in [(prise[0]-1,prise[1]),(prise[0]+1,prise[1]),(prise[0],prise[1]-1),(prise[0],prise[1]+1)]:
+            if est_case_libre(case_autour[1],case_autour[0], carte):
+                appariton_possible.append(case_autour)
+        if appariton_possible != []:
+            appariton = appariton_possible[randint(0,len(appariton_possible)-1)]
+            carte[appariton[0]][appariton[1]] = "F"
+            registe_f.append(Fantome(appariton[1],appariton[0]))
+    return registe_f
+
+
+
+
+
+
+
     
 def toursuivant(numero:list) -> list:
     """
-    toursuivant fait l'affichage du tour suivant
+    toursuivant refresh le nombre de tours restants
 
     Args:
-        numero (list): numéro du tour actuel
+        numero (list): nombre de tours restants
+
 
     Returns:
         int: numéro du tour suivant
     """
-    numero[0] += 1
+    numero[0] -= 1
     g.supprimer(numero[1])
-    texte_a_écrire = "Tour n°" + str(numero[0])
+    texte_a_écrire = "Tours restants : " + str(numero[0])
     text = g.afficherTexte(texte_a_écrire, 6*cfg.taillecase, 22*cfg.taillecase, "black", 14)
     g.actualiser()
     return [numero[0], text]
+
+def est_partie_finie(numero:list) -> bool:
+    """
+    partie finie renvoie l'état de la partie
+
+    Args:
+        numero (list): nombre de tours restants
+
+
+    Returns:
+        bool: True si la partie est terminée
+    """
+    if numero[0] < 0: 
+        return True 
+    return False
 
 
 # jeu
@@ -177,14 +300,31 @@ joueur = Bomber(g.afficherImage(position["bomber"][0], position["bomber"][1], "i
 registre_fantome = []
 
 #début tour
-tour = [0, g.afficherTexte("Tour n°0", 6*cfg.taillecase, 20*cfg.taillecase, "black", 14)]
+tour = [cfg.TIMER_GLOBAL, g.afficherTexte("Tours restants : ", 6*cfg.taillecase, 20*cfg.taillecase, "black", 14)]
 while joueur.en_vie():  
     tour = toursuivant(tour)   
+    if est_partie_finie(tour):
+        text_fini = g.afficherTexte("GAME OVER", 12*cfg.taillecase, 22*cfg.taillecase, "red", "20")
+        while g.recupererClic() is None:
+            continue
+        g.fermerFenetre()
+        
     
     touche = g.attendreTouche()
     if touche == "x":
-        joueur.tuer_bomber()
+        ui_confirmation = g.afficherImage(0, 0, "img/ui_confirmation.png", "nw", cfg.longueurfenetre, cfg.largeurfenetre)
+        touche = g.attendreTouche()
+        touche_pressee = True
+        while touche_pressee:
+            if touche == "o":
+                touche_pressee = False
+                joueur.tuer_bomber()
+            elif touche == "n": 
+                touche_pressee = False
+                g.supprimer(ui_confirmation)
+            else: 
+                touche = g.attendreTouche()
+
     else:
         joueur.deplacement(touche)
-print("GAME OVER")
 
