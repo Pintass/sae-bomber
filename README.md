@@ -1,9 +1,8 @@
 # SAE Bomber - BUT
 
-## Description
+## Histoire
 
-- SAE Bomber - BUT est un jeu inspiré du célèbre Bomberman. Ce jeu se déroule en tour par tour, et votre objectif est de détruire le maximum de murs et de fantômes dans le temps imparti afin d'obtenir le meilleur score possible.
-- Dans cette version intitulée "BomberBUT", plusieurs fonctionnalités ont été ajoutées pour enrichir l'expérience de jeu.
+- Dans un futur lointain, des fonds monétaires ont enfin été débloqués pour rénover le bâtiment Maryse Bastier de l'IUT, aussi connu sous sous le nom de halle informatique. L'UVSQocaCola, un consortium industrio-universitaire, fait alors appel à une entreprise de démolition, qui doit rapidement casser tous les murs de la halle. Mais tout ne sera pas si simple car des fantômes d'anciens étudiants ne voulant pas quitter les lieux adorés errent dans la halle pour empêcher sa démolition... Le joueur, dont le personnage est appelé Bomber, essaie de rester en vie le plus longtemps possible en faisant exploser un maximum de murs et de fantômes, ce qui lui rapporte des points. Pour ce faire, il pose des bombes, se met à l'abri le temps qu'elles explosent.
 
 ## Fonctionnalités principales
 
