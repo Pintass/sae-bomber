@@ -121,17 +121,19 @@ class Bomber:
             
     def perte_vie(self) -> bool:
         """
-        perte_vie retranche un point de vie et renvoie si le bomber est toujours en vie suite à la perte de point de vie
+        perte_vie retranche un point de vie au bomber
 
         Args:
             self (Bomber): Un objet Bomber
-
+            
         Returns:
-            bool: True si le bomber est en vie, False sinon
+            (bool): True si le bomber est toujours en vie, False sinon
         """
-        assert self.en_vie(), "Le bomber est déjà mort"
         self.vie = self.vie-1
-        return self.en_vie()
+        if not self.en_vie():
+            print("Le Bomber est mort")
+            return False
+        return True
         
     def tuer_bomber(self) -> None:
         """
@@ -217,22 +219,71 @@ class Fantome:
         self.y = y
         self.ancienx = None
         self.ancieny = None
+                
+    def a_bouger(self, nouveau_x:int, nouveau_y:int) -> None:
+        self.ancienx = self.x
+        self.ancieny = self.y
+        self.x = nouveau_x
+        self.y = nouveau_y
+        return
         
-    def a_bouger(self) -> None:
-        self.x = self.ancienx
-        self.y = self.ancieny
         
-    def attaque(self, registre_f:list, carte:list) -> None:
+    def placer_f(self, carte:list) -> None:
         """
-        attaque des fantome pour un tour de jeu
+        placer_f Enlève de la carte le fantome aux anciennes positions et le met aux nouvelles
 
         Args:
-            registre_f (list): liste des fantome sur la carte qui vont attaquer
             carte (list): carte du jeu
         """
-        nouveau_registre_pos = []
-        for i in range(len(registre_f)):
-            pass            
+        assert carte[self.ancieny][self.ancienx] == "F","Il faut un fantome"
+        carte[self.ancieny][self.ancienx] = " "
+        carte[self.y][self.x] = "F"
+        return
+        
+    def deplacement_f(self, carte:list) -> None:
+        """
+        déplacement_f fait bouger les fantome pour un tour de jeu
+
+        Args:
+            carte (list): carte du jeu
+        """
+        déplacment_possible = []
+        if est_case_libre(self.x, self.y-1, carte) and self.y-1 != self.ancieny:
+            déplacment_possible.append((self.x, self.y-1))
+            
+        if est_case_libre(self.x, self.y+1, carte) and self.y+1 != self.ancieny:
+            déplacment_possible.append((self.x, self.y+1))
+            
+        if est_case_libre(self.x-1, self.y, carte) and self.x-1 != self.ancienx:
+            déplacment_possible.append((self.x-1, self.y))
+            
+        if est_case_libre(self.x+1, self.y, carte) and self.x+1 != self.ancienx:
+            déplacment_possible.append((self.x+1, self.y))
+        
+        if déplacment_possible == [] and est_case_libre(self.ancienx, self.ancieny, carte):
+            self.a_bouger(self.ancienx, self.ancieny)
+            self.placer_f(carte)
+            
+        elif déplacment_possible != []:
+            if len(déplacment_possible) == 1:
+                choix = 0
+            else:
+                choix = randint(0,len(déplacment_possible)-1)
+            self.a_bouger(déplacment_possible[choix][0],déplacment_possible[choix][1])
+            self.placer_f(carte)
+        return
+    
+    def dois_attaquer_bomber(self, carte:list) -> bool:
+        """
+        dois_attaquer_bomber renvoie un booléen qui indique si le fantome a un bomber dans on vosinnage et dois l'attaquer
+
+        Returns:
+            bool: True si le fantome dois attaquer le bomber, False sinon
+        """
+        attaque = False
+        if carte[self.y-1][self.x] == "P" or carte[self.y+1][self.x] == "P" or carte[self.y][self.x-1] == "P" or carte[self.y][self.x+1] == "P":
+            attaque = True
+        return attaque                    
         
 def génération_fantome(emplacement_prise:list, carte:list, registe_f:list) -> list:
     """
@@ -256,6 +307,14 @@ def génération_fantome(emplacement_prise:list, carte:list, registe_f:list) -> 
             carte[appariton[0]][appariton[1]] = "F"
             registe_f.append(Fantome(appariton[1],appariton[0]))
     return registe_f
+
+def action_des_fantomes(registre_f:list, carte:list, bomber:Bomber) -> None:
+    for fantome in registre_f:
+        if fantome.dois_attaquer_bomber(carte):
+            bomber.perte_vie()
+        else:
+            fantome.deplacement_f(carte)
+            
             
                 
                  
@@ -275,7 +334,7 @@ affichage_carte(carte)
 registre_fantome = []
 
 #Tour de jeu
-tour = 0
+tour = 15
 while bomber0.en_vie():
     tour = toursuivant(tour)
     
@@ -289,6 +348,9 @@ while bomber0.en_vie():
     else:
         bomber0.deplacement(carte,touche)
         affichage_carte(carte)
+    
+    action_des_fantomes(registre_fantome, carte, bomber0)    
+    
 print("GAME OVER")
 
 
